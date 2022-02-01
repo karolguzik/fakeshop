@@ -1,0 +1,27 @@
+version: "3"
+services:
+  postgres:
+    container_name: postgres
+    image: "postgres"
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+  app:
+    container_name: app
+    restart: on-failure
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - /app/node_modules
+      - .:/app
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - postgres
+    environment:
+      - PGUSER=${DB_USER}
+      - PGHOST=${DB_HOST}
+      - PGDATABASE=${DB_NAME}
+      - PGPASSWORD=${DB_PASSWORD}
+      - PGPORT=${DB_PORT}
